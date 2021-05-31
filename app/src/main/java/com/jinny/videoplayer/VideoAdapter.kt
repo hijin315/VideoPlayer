@@ -12,18 +12,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.jinny.videoplayer.model.VideoModel
 
-class VideoAdapter : ListAdapter<VideoModel, VideoAdapter.ViewHolder>(diffUtil) {
+class VideoAdapter(val callback: (String, String) -> Unit) :
+    ListAdapter<VideoModel, VideoAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         fun bind(item: VideoModel) {
             val titleTextView = view.findViewById<TextView>(R.id.title_textView)
             val subtitleTextView = view.findViewById<TextView>(R.id.subtitle_textView)
             val thumbImageView = view.findViewById<ImageView>(R.id.thum_imageView)
-
+            val profileImageView = view.findViewById<ImageView>(R.id.profile_imageView)
             titleTextView.text = item.title
             subtitleTextView.text = item.subtitle
 
             Glide.with(thumbImageView.context).load(item.thumb).into(thumbImageView)
+            Glide.with(thumbImageView.context).load(item.thumb).circleCrop().into(profileImageView)
+
+            view.setOnClickListener {
+                callback(item.sources,item.title)
+            }
         }
 
     }

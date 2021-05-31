@@ -21,7 +21,11 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, PlayerFragment())
             .commit()       // 프래그먼트 붙이기
-        videoAdapter = VideoAdapter()
+        videoAdapter = VideoAdapter(callback = { url, title ->
+            supportFragmentManager.fragments.find { it is PlayerFragment }?.let {
+                (it as PlayerFragment).play(url, title)
+            }
+        })
         findViewById<RecyclerView>(R.id.main_recyclerView).apply {
             adapter = videoAdapter
             layoutManager = LinearLayoutManager(context)
